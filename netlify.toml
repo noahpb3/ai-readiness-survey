@@ -1,18 +1,33 @@
 [build]
-  command = "pnpm install && pnpm build && cp client/public/_redirects dist/public/_redirects"
+  command = "pnpm install && pnpm build"
   publish = "dist/public"
   functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "22.13.0"
-  NPM_FLAGS = "--version" # Disable npm
+  NPM_FLAGS = "--version"
   PNPM_VERSION = "10.4.1"
 
+# API redirects MUST come first, before the catch-all
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  from = "/api/survey/submit"
+  to = "/.netlify/functions/survey-submit"
   status = 200
+  force = true
 
+[[redirects]]
+  from = "/api/admin/responses"
+  to = "/.netlify/functions/admin-responses"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/admin/stats"
+  to = "/.netlify/functions/admin-stats"
+  status = 200
+  force = true
+
+# Catch-all for SPA routing - MUST be last
 [[redirects]]
   from = "/*"
   to = "/index.html"
