@@ -1,14 +1,3 @@
-
-Published
-netlify
-/
-functions
-/
-admin-responses.ts
-1234567
-Text file: admin-responses.tsLatest content with line numbers:46    try {47      const connectionString = process.env.DATABASE_URL || 'postgresql://postgres.bmsyrncxiohcqwvjzbea:oIMziLaMpIgojNDK@aws-1-us-east-1.pooler.supabase.com:5432/postgres';48      const client = postgres(connectionString);49      const db = drizzle(client, { schema: { surveyResponses } });50  
-
-admin-responses-NEW.ts
 import { Handler } from '@netlify/functions';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
@@ -53,3 +42,27 @@ export const handler: Handler = async (event) => {
       body: JSON.stringify({ error: 'Method not allowed' }),
     };
   }
+
+  try {
+    const connectionString = process.env.DATABASE_URL || 'postgresql://postgres.bmsyrncxiohcqwvjzbea:oIMziLaMpIgojNDK@aws-1-us-east-1.pooler.supabase.com:5432/postgres';
+    const client = postgres(connectionString);
+    const db = drizzle(client, { schema: { surveyResponses } });
+
+    const responses = await db.select().from(surveyResponses).orderBy(desc(surveyResponses.completedAt));
+
+    await client.end();
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify(responses),
+    };
+  } catch (error) {
+    console.error('Error fetching responses:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'Failed to fetch responses' }),
+    };
+  }
+};
