@@ -91,7 +91,7 @@ export default function Survey() {
           return acc;
         }, {} as Record<string, number>);
 
-        const response = await fetch('/api/survey/submit', {
+        const response = await fetch('/.netlify/functions/survey-submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
