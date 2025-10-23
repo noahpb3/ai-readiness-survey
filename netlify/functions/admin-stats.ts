@@ -44,7 +44,7 @@ export const handler: Handler = async (event) => {
   }
 
   try {
-    const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:oIMziLaMpIgojNDK@db.bmsyrncxiohcqwvjzbea.supabase.co:5432/postgres';
+    const connectionString = process.env.DATABASE_URL || 'postgresql://postgres.bmsyrncxiohcqwvjzbea:oIMziLaMpIgojNDK@aws-1-us-east-1.pooler.supabase.com:5432/postgres';
     const client = postgres(connectionString);
     const db = drizzle(client, { schema: { surveyResponses } });
 
